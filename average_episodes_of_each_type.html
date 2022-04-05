@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <title>D3 Bar Chart of Average Episodes of Each Anime Type</title>
+    <style type="text/css"></style>
+  </head>
+  <body>
+    <h1>Bar Chart of Average Episodes of Each Anime Type</h1>
+    <svg width="1000" height="700"></svg>
+  </body>
+  <script type="text/javascript">
+    (async () => {
+      // fetch data
+      const dataset = await d3.csv('https://gumichocopengin8.github.io/public/anime.csv', (data) => data);
+      console.log(dataset.length);
+      console.log(dataset[0]);
+      let map = new Map();
+      let countMap = new Map();
+
+      // calculate data
+      for (const row of dataset) {
+        if (!row['type']) continue;
+        const animeType = row['type'];
+        const episodes = Number(row['episodes']) || 1;
+        if (map.has(animeType)) {
+          map.set(animeType, map.get(animeType) + episodes);
+          countMap.set(animeType, countMap.get(animeType) + 1);
+        } else {
+          map.set(animeType, episodes);
+          countMap.set(animeType, 1);
+        }
+      }
+      map = new Map([...map.entries()].sort((a, b) => b[1] - a[1]));
+      const animeTypes = Array.from(map.keys());
+      const values = Array.from(map.values());
+      const objData = [];
+      for (let i = 0; i < animeTypes.length; i++) {
+        objData.push({ animeType: animeTypes[i], count: values[i] / countMap.get(animeTypes[i]) });
+      }
+
+      //---
+
+      // setup svg canvas
+      const svg = d3.select('svg');
+      const width = svg.attr('width');
+      const height = svg.attr('height');
+
+      // x scale
+      const xScale = d3
+        .scaleBand()
+        .domain(objData.map((d) => d.animeType))
+        .range([0, width / 2])
+        .padding(0.4);
+
+      // y scale
+      const yScale = d3
+        .scaleLinear()
+        .domain([0, d3.max(objData, (d) => d.count)])
+        .range([0, height / 2]);
+
+      // move chart
+      const g = svg.append('g').attr('transform', 'translate(240, 100)');
+
+      // label X
+      g.append('g')
+        .call(
+          d3
+            .axisLeft(xScale)
+            .tickFormat((d) => d)
+            .ticks(1)
+        )
+        .append('text')
+        .attr('y', 0)
+        .attr('dx', '30em')
+        .attr('dy', '-5em')
+        .attr('text-anchor', 'end')
+        .attr('stroke', 'black')
+        .text('Average Episodes');
+
+      // label Y
+      g.append('g')
+        .attr('transform', 'translate(0, 0)')
+        .call(d3.axisTop(yScale).ticks(15))
+        .append('text')
+        .attr('transform', 'rotate(-90)')
+        .attr('y', 5)
+        .attr('dx', '-30em')
+        .attr('dy', '-20em')
+        .attr('text-anchor', 'end')
+        .attr('stroke', 'black')
+        .text('animeType');
+
+      // render bars
+      g.selectAll('.bar')
+        .data(objData)
+        .join('rect')
+        .attr('class', 'bar')
+        .attr('x', yScale(0))
+        .attr('y', (d) => xScale(d.animeType))
+        .attr('width', (d) => yScale(d.count))
+        .attr('height', xScale.bandwidth())
+        .attr('fill', 'skyblue');
+
+      // Marks
+      g.selectAll('.text')
+        .data(objData)
+        .join('text')
+        .attr('x', (d) => yScale(d.count) + 5)
+        .attr('y', (d) => xScale(d.animeType) + 5)
+        .attr('font-size', '12px')
+        .text((d) => d.count);
+    })();
+  </script>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <title>D3 Pie Chart of Anime Type Count</title>
+    <style type="text/css"></style>
+  </head>
+  <body>
+    <h1>Pie Chart of Anime Type Count</h1>
+    <svg width="1200" height="1000"></svg>
+  </body>
+  <script type="text/javascript">
+    // reference: https://d3-graph-gallery.com/graph/pie_annotation.html
+    (async () => {
+      // fetch data
+      const dataset = await d3.csv('https://gumichocopengin8.github.io/public/anime.csv', (data) => data);
+      console.log(dataset.length);
+      console.log(dataset[0]);
+      const map = new Map();
+
+      // calculate data
+      for (const row of dataset) {
+        const animeType = row['type'] || 'N/A';
+        if (map.has(animeType)) {
+          map.set(animeType, map.get(animeType) + 1);
+        } else {
+          map.set(animeType, 1);
+        }
+      }
+      const objData = Object.fromEntries(new Map([...map.entries()].sort((a, b) => b[1] - a[1])));
+
+      //---
+
+      const width = 850;
+      const height = 850;
+      const margin = 40;
+
+      const radius = Math.min(width, height) / 2 - margin;
+
+      const svg = d3
+        .select('svg')
+        .append('svg')
+        .attr('width', width)
+        .attr('height', height)
+        .append('g')
+        .attr('transform', `translate(${width / 2}, ${height / 2})`);
+
+      const color = d3.scaleOrdinal().range(d3.schemeSet2);
+      const pie = d3.pie().value((d) => d[1]);
+      const piData = pie(Object.entries(objData));
+      const arcGenerator = d3.arc().innerRadius(0).outerRadius(radius);
+
+      svg
+        .selectAll('mySlices')
+        .data(piData)
+        .join('path')
+        .attr('d', arcGenerator)
+        .attr('fill', (d) => color(d.data[0]))
+        .attr('stroke', 'black')
+        .style('stroke-width', '2px')
+        .style('opacity', 0.7);
+
+      svg
+        .selectAll('mySlices')
+        .data(piData)
+        .join('text')
+        .text((d) => d.data[0])
+        .attr('transform', (d) => `translate(${arcGenerator.centroid(d)})`)
+        .style('text-anchor', 'middle')
+        .style('font-size', 12);
+    })();
+  </script>
+</html>
