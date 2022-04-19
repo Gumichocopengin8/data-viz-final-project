@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
+    <script src="http://colorbrewer2.org/export/colorbrewer.js"></script>
+    <title>D3 ScatterPlot</title>
+    <style type="text/css">
+      .tick line {
+        stroke: #c0c0bb;
+      }
+
+      .tick text,
+      .legendCells text {
+        fill: #8e8883;
+        font-size: 12pt;
+        font-family: sans-serif;
+      }
+
+      .axis-label,
+      .legend-label {
+        fill: #635f5d;
+        font-size: 16pt;
+        font-family: sans-serif;
+      }
+
+      .legend-text {
+        cursor: pointer;
+      }
+
+      .tooltip {
+        position: absolute;
+        text-align: center;
+        width: auto;
+        height: auto;
+        padding: 5px;
+        font: 12px;
+        background: gray;
+        color: white;
+        visibility: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Scatterplot between Episodes and Rating</h1>
+    <svg width="1000" height="500"></svg>
+  </body>
+  <script type="text/javascript">
+    // reference
+    // https://bl.ocks.org/anonymous/7a65777a1e310b76aca5d499e967c467
+    (async () => {
+      // fetch data
+      const dataset = await d3.csv('https://gumichocopengin8.github.io/public/anime.csv', (data) => data);
+      console.log(dataset.length);
+      console.log(dataset[0]);
+      const objData = dataset // extract data
+        .map((d) => {
+          return {
+            name: d['name'],
+            genre: d['genre'],
+            type: d['type'],
+            episodes: Number(d['episodes']),
+            rating: Number(d['rating']),
+          };
+        })
+        .filter((d) => d.type);
+
+      const mediaTypes = Array.from(new Set(objData.map((d) => d.type))).filter((d) => d);
+
+      // ---
+
+      const margin = { top: 10, right: 200, bottom: 100, left: 100 };
+      const width = 1400 - margin.left - margin.right;
+      const height = 800 - margin.top - margin.bottom;
+
+      // setup svg canvas
+      const svg = d3
+        .select('svg')
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', height + margin.top + margin.bottom)
+        .append('g')
+        .attr('transform', `translate(${margin.left}, ${margin.top})`);
+
+      const innerWidth = width - margin.left - margin.right;
+      const innerHeight = height - margin.top - margin.bottom;
+
+      const g = svg.append('g').attr('transform', `translate(${margin.left}, ${margin.top})`);
+      const colorLegendG = g.append('g').attr('transform', `translate(${innerWidth + 60}, 50)`);
+
+      colorLegendG.append('text').attr('class', 'legend-label').attr('x', -30).attr('y', -40).text('Media Type');
+
+      // x scale
+      const xScale = d3
+        .scaleLinear()
+        .domain(d3.extent(objData, (d) => d.rating))
+        .range([0, innerWidth])
+        .nice();
+
+      // y scale
+      const yScale = d3
+        .scaleLinear()
+        .domain(d3.extent(objData, (d) => d.episodes))
+        .range([innerHeight, 0])
+        .nice();
+
+      // color scale
+      const colorScale = d3.scaleOrdinal().range(colorbrewer.Set1[7]);
+
+      // color legend
+      const colorLegend = d3.legendColor().scale(colorScale).shape('circle');
+
+      // tooltip
+      const tooltip = d3.select('body').append('div').attr('class', 'tooltip');
+
+      // dots
+      g.selectAll('circle')
+        .data(objData)
+        .enter()
+        .append('circle')
+        .attr('cx', (d) => xScale(d.rating))
+        .attr('cy', (d) => yScale(d.episodes))
+        .attr('fill', (d) => colorScale(d.type))
+        .style('stroke', 'white')
+        .attr('r', 8)
+        .attr('visibility', 'visible')
+        .attr('id', (d) => d.type)
+        .on('mouseover', (event, d) => {
+          tooltip.style('visibility', 'visible').html(`
+            <div>Title: ${d.name}</div>
+          `);
+        })
+        .on('mousemove', (event, d) => {
+          tooltip.style('top', event.pageY + 'px').style('left', event.pageX + 'px');
+        })
+        .on('mouseleave', (event, d) => {
+          tooltip.style('visibility', 'hidden');
+        });
+
+      // graph lines
+      g.append('g')
+        .attr('transform', `translate(0, ${innerHeight})`)
+        .call(d3.axisBottom().scale(xScale).tickPadding(15).tickSize(-innerHeight));
+      g.append('g').call(d3.axisLeft().scale(yScale).ticks(5).tickPadding(15).tickSize(-innerWidth));
+
+      colorLegendG
+        .attr('class', 'legend-text')
+        .call(colorLegend)
+        .selectAll('.cell text')
+        .attr('dy', '0.1em')
+        .on('click', (event, d) => {
+          const id = d;
+          if (g.selectAll(`#${id}`).attr('visibility') === 'hidden') {
+            g.selectAll(`#${id}`).attr('visibility', 'visible');
+          } else {
+            g.selectAll(`#${id}`).attr('visibility', 'hidden');
+          }
+        })
+        .on('mouseover', (event, d) => {
+          const id = d;
+          if (g.selectAll(`#${id}`).attr('visibility') === 'hidden') return;
+          g.selectAll(`#${id}`).raise();
+          const filterdColumnIds = mediaTypes.filter((d) => d !== id);
+          for (const filteredId of filterdColumnIds) {
+            g.selectAll(`#${filteredId}`).attr('fill', 'lightgrey');
+          }
+        })
+        .on('mouseleave', (event, d) => {
+          for (const id of mediaTypes) {
+            g.selectAll(`#${id}`).attr('fill', colorScale(id));
+          }
+        });
+
+      // label x
+      g.append('g')
+        .attr('transform', `translate(0, ${innerHeight})`)
+        .append('text')
+        .attr('class', 'axis-label')
+        .attr('x', innerWidth / 2)
+        .attr('y', 100)
+        .text('Rating');
+
+      // label y
+      g.append('g').append('text').attr('class', 'axis-label').attr('x', -150).attr('y', 200).text('Episodes');
+    })();
+  </script>
+</html>
