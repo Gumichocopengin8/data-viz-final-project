@@ -23,7 +23,8 @@
 
       // calculate data
       for (const row of dataset) {
-        const animeType = row['type'] || 'N/A';
+        if (!row['type']) continue;
+        const animeType = row['type'];
         if (map.has(animeType)) {
           map.set(animeType, map.get(animeType) + 1);
         } else {
@@ -70,7 +71,7 @@
         .text((d) => d.data[0])
         .attr('transform', (d) => `translate(${arcGenerator.centroid(d)})`)
         .style('text-anchor', 'middle')
-        .style('font-size', 12);
+        .style('font-size', 20);
     })();
   </script>
 </html>
