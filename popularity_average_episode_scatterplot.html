@@ -67,7 +67,7 @@
             rating: Number(d['rating']),
           };
         })
-        .filter((d) => d.type);
+        .filter((d) => d.type && d.rating && d.episodes);
 
       const mediaTypes = Array.from(new Set(objData.map((d) => d.type))).filter((d) => d);
 
@@ -131,6 +131,8 @@
         .on('mouseover', (event, d) => {
           tooltip.style('visibility', 'visible').html(`
             <div>Title: ${d.name}</div>
+            <div>Rating: ${d.rating}</div>
+            <div>Episodes: ${d.episodes}</div>
           `);
         })
         .on('mousemove', (event, d) => {
