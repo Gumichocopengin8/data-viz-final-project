@@ -5,10 +5,37 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Anime Analyze</title>
+    <style type="text/css">
+      body {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: rgb(246, 240, 240);
+      }
+
+      section {
+        width: 70%;
+      }
+
+      iframe {
+        border: 0;
+      }
+
+      hr {
+        width: 80%;
+      }
+    </style>
   </head>
   <body>
     <h1>What factors make anime exciting?</h1>
     <div>Keita Nonaka</div>
+    <hr />
+    <section>
+      <h2>Alpha Release Report</h2>
+      <a href="./pdf/alpha_release.pdf">Alpha Release Report</a>
+    </section>
     <section>
       <h2>Introduction</h2>
       <p>
@@ -18,31 +45,28 @@
         anime is good to watch objectively.
       </p>
     </section>
+    <hr />
     <section>
-      <h2>Anime Type Chart</h2>
-      <a href="./count_anime_type_pie_chart.html">Pie Chart of Anime Type Count</a>
+      <h2>Anime Type Count</h2>
+      <iframe title="Inline Frame Example" width="100%" height="850px" src="./count_anime_type_pie_chart.html">
+      </iframe>
     </section>
+    <hr />
     <section>
-      <h2>Average Episodes Chart</h2>
-      <a href="./average_episodes_of_each_type.html">Bar Chart of Average Episodes of Each Anime Type</a>
+      <h2>Average Episodes of Each Anime Type</h2>
+      <iframe title="Inline Frame Example" width="100%" height="720px" src="./average_episodes_of_each_type.html">
+      </iframe>
     </section>
+    <hr />
     <section>
-      <h2>Scatterplot</h2>
-      <a href="./popularity_average_episode_scatterplot.html">Scatterplot between Episodes and Ratin</a>
+      <h2>Scatterplot between Episodes and Rating (Interactice Graph)</h2>
+      <iframe
+        title="Inline Frame Example"
+        width="100%"
+        height="750px"
+        src="./popularity_average_episode_scatterplot.html"
+      >
+      </iframe>
     </section>
-    <section>
-      <h2>Alpha Release Report</h2>
-      <a href="./pdf/alpha_release.pdf">Alpha Release Report</a>
-    </section>
-    <!-- <section>
-      <h2>Correlation between Episodes and Popularity</h2>
-      <p>add scatterplot</p>
-      <p>Description</p>
-    </section>
-    <section>
-      <h2>Recommended Anime</h2>
-      <p>add Complex chart</p>
-      <p>Description</p>
-    </section> -->
   </body>
 </html>

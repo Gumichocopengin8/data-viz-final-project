@@ -9,7 +9,6 @@
     <style type="text/css"></style>
   </head>
   <body>
-    <h1>Bar Chart of Average Episodes of Each Anime Type</h1>
     <svg width="1000" height="700"></svg>
   </body>
   <script type="text/javascript">
@@ -41,6 +40,8 @@
       for (let i = 0; i < animeTypes.length; i++) {
         objData.push({ animeType: animeTypes[i], count: values[i] / countMap.get(animeTypes[i]) });
       }
+
+      objData.sort((a, b) => b.count - a.count);
 
       //---
 
@@ -111,7 +112,7 @@
         .join('text')
         .attr('x', (d) => yScale(d.count) + 5)
         .attr('y', (d) => xScale(d.animeType) + 5)
-        .attr('font-size', '12px')
+        .attr('font-size', '16px')
         .text((d) => d.count);
     })();
   </script>
