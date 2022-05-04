@@ -17,8 +17,6 @@
     (async () => {
       // fetch data
       const dataset = await d3.csv('https://gumichocopengin8.github.io/public/anime.csv', (data) => data);
-      console.log(dataset.length);
-      console.log(dataset[0]);
       const map = new Map();
 
       // calculate data
@@ -32,6 +30,8 @@
         }
       }
       const objData = Object.fromEntries(new Map([...map.entries()].sort((a, b) => b[1] - a[1])));
+
+      const total = Object.values(objData).reduce((a, b) => a + b);
 
       //---
 
@@ -68,10 +68,10 @@
         .selectAll('mySlices')
         .data(piData)
         .join('text')
-        .text((d) => d.data[0])
+        .text((d) => `${d.data[0]} ${String((d.data[1] / total) * 100).slice(0, 4)}%`)
         .attr('transform', (d) => `translate(${arcGenerator.centroid(d)})`)
         .style('text-anchor', 'middle')
-        .style('font-size', 20);
+        .style('font-size', 16);
     })();
   </script>
 </html>

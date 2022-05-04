@@ -55,8 +55,6 @@
     (async () => {
       // fetch data
       const dataset = await d3.csv('https://gumichocopengin8.github.io/public/anime.csv', (data) => data);
-      console.log(dataset.length);
-      console.log(dataset[0]);
       const objData = dataset // extract data
         .map((d) => {
           return {
