@@ -7,12 +7,14 @@
     <title>Anime Analysis</title>
     <style type="text/css">
       body {
-        width: 100%;
+        max-width: 100vw;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         background-color: rgb(246, 240, 240);
+        font-size: 1.25rem;
+        font-family: Helvetica, Arial, sans-serif;
       }
 
       section {
@@ -25,6 +27,11 @@
 
       hr {
         width: 80%;
+      }
+
+      span {
+        font-weight: bolder;
+        color: hotpink;
       }
     </style>
   </head>
@@ -44,6 +51,25 @@
         like a certain kind of anime too. After analyzing anime trends, I can convince myself and my friends why the
         anime is good to watch objectively.
       </p>
+    </section>
+    <section>
+      <h2>Data</h2>
+      <h3>Data Resource</h3>
+      <p>
+        I got data from <a href="https://www.kaggle.com/datasets/CooperUnion/anime-recommendations-database">Kaggle</a>.
+      </p>
+      <h3>Variables</h3>
+      <ul>
+        <li><span>anime_id</span>: myanimelist.net's unique id identifying an anime.</li>
+        <li><span>name</span>: full name of anime.</li>
+        <li><span>genre</span>: comma separated list of genres for this anime.</li>
+        <li>
+          <span>type</span>: movie, TV, OVA, etc. OVA stands for Original Video Anime. ONA stands for Original Net Anime
+        </li>
+        <li><span>episodes</span>: how many episodes in this show. (1 if movie).</li>
+        <li><span>rating</span>: average rating out of 10 for this anime.</li>
+        <li><span>members</span>: number of community members that are in this anime's group</li>
+      </ul>
     </section>
     <hr />
     <section>
