@@ -33,6 +33,11 @@
         font-weight: bolder;
         color: hotpink;
       }
+
+      p,
+      li {
+        line-height: 2;
+      }
     </style>
   </head>
   <body>
@@ -76,12 +81,22 @@
       <h2>Anime Type Count</h2>
       <iframe title="Inline Frame Example" width="100%" height="850px" src="./count_anime_type_pie_chart.html">
       </iframe>
+      <p>
+        TV, OVA, and Movie categories ocupy more than 75% of the graph. Undoubtedly, TV is the most popular category.
+        Derived anime from original anime called OVA is also popular due to the original anime. Usually the popular
+        anime becomes movie series to extend the story, so these 3 categories are pretty much the same things.
+      </p>
     </section>
     <hr />
     <section>
       <h2>Average Episodes of Each Anime Type</h2>
       <iframe title="Inline Frame Example" width="100%" height="720px" src="./average_episodes_of_each_type.html">
       </iframe>
+      <p>
+        TV series average episodes is 33 episodes which is almost 3 seasons. However, OVA's average episodes is only 2.3
+        episodes. OVA are usually short series because it is not directly related to the original story. Meanwhile, ONA
+        is a little bit longer than OVA. Music anime is not popular at all.
+      </p>
     </section>
     <hr />
     <section>
@@ -93,6 +108,12 @@
         src="./popularity_average_episode_scatterplot.html"
       >
       </iframe>
+      <p>
+        This is a scatterplot graph to find out the relationship between episodes and rating. The total episodes of the
+        popular TV series with over 8 rating tend to have less than 200 episodes. If the number of episodes go higher
+        than 200, new users usually hesitate to watch a whole series. Also, there are weal positive correlation in all
+        categories.
+      </p>
     </section>
   </body>
 </html>
