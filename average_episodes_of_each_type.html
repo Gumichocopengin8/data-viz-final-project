@@ -74,10 +74,11 @@
         )
         .append('text')
         .attr('y', 0)
-        .attr('dx', '30em')
-        .attr('dy', '-5em')
+        .attr('dx', '16em')
+        .attr('dy', '-2em')
         .attr('text-anchor', 'end')
         .attr('stroke', 'black')
+        .attr('font-size', '20px')
         .text('Average Episodes');
 
       // label Y
@@ -85,12 +86,12 @@
         .attr('transform', 'translate(0, 0)')
         .call(d3.axisTop(yScale).ticks(15))
         .append('text')
-        .attr('transform', 'rotate(-90)')
         .attr('y', 5)
-        .attr('dx', '-30em')
-        .attr('dy', '-20em')
+        .attr('dx', '-5em')
+        .attr('dy', '10em')
         .attr('text-anchor', 'end')
         .attr('stroke', 'black')
+        .attr('font-size', '20px')
         .text('animeType');
 
       // render bars
