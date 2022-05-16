@@ -112,7 +112,7 @@
         .attr('x', (d) => yScale(d.count) + 5)
         .attr('y', (d) => xScale(d.animeType) + 5)
         .attr('font-size', '16px')
-        .text((d) => d.count);
+        .text((d) => d.count.toFixed(2));
     })();
   </script>
 </html>
